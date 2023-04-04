@@ -1,13 +1,14 @@
 package repo
 
 import (
+	"errors"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 )
 
-func GetModel(dtmi string) string {
+func GetModel(dtmi string) (string, error) {
 	path := DtmiToPath(dtmi)
 	baseRepoUrl := "https://devicemodels.azure.com/"
 	modelUrl := baseRepoUrl + path
@@ -23,11 +24,11 @@ func DtmiToPath(dtmi string) string {
 	return path
 }
 
-func get(url string) string {
+func get(url string) (string, error) {
 	client := http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	log.Println("request to:", url)
 	req.Header = http.Header{
@@ -35,14 +36,15 @@ func get(url string) string {
 	}
 	resp, err := client.Do(req)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	log.Println("response status:", resp.Status)
 	log.Println("response headers:", resp.Header)
 	if resp.StatusCode != 200 {
-		panic(resp)
+		return "", errors.New(
+			"Invalid status code for model fetch: " + resp.Status)
 	}
 
 	body, _ := io.ReadAll(resp.Body)
-	return string(body)
+	return string(body), nil
 }
