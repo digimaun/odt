@@ -88,10 +88,25 @@ func fetchTelemetry(contents []interface{}) map[string]map[string]string {
 			r[name] = make(map[string]string)
 			for j := 0; j < len(kpis); j++ {
 				if val, exists := attr[kpis[j]]; exists {
-					r[name][kpis[j]] = val.(string)
+					r[name][kpis[j]] = attrValueToString(val)
 				}
 			}
 		}
 	}
 	return r
+}
+
+func attrValueToString(value interface{}) string {
+	switch t := value.(type) {
+	case string:
+		return value.(string)
+	case interface{}:
+		if v, exists := value.(map[string]interface{})["en"]; exists {
+			return v.(string)
+		}
+	default:
+		fmt.Printf("unexpected type %T\n", t)
+	}
+
+	return ""
 }

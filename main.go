@@ -8,11 +8,17 @@ import (
 )
 
 func main() {
-	test := model.NewModel("dtmi:com:example:Thermostat;1")
-	fmt.Println(test.Dtmi)
-	fmt.Println(test.DtdlVersion)
-	json, _ := test.AsJson()
-	fmt.Printf("%s\n", json)
+	test1 := model.NewModel("dtmi:com:example:temperaturecontroller;1")
+	fmt.Println(test1.Dtmi)
+	fmt.Println(test1.DtdlVersion)
+	json1, _ := test1.AsJson()
+	fmt.Printf("%s\n", json1)
+
+	test2 := model.NewModel("dtmi:com:example:azuresphere:altair;1")
+	fmt.Println(test2.Dtmi)
+	fmt.Println(test2.DtdlVersion)
+	json2, _ := test2.AsJson()
+	fmt.Printf("%s\n", json2)
 
 	testDtmis := []string{"dtmi:com:example:TemperatureController;1", "dtmi:com:example:TemperatureController"}
 	ProcessGetModel(testDtmis)
